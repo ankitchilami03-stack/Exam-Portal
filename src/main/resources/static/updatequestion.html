@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Question</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f4f6f9;
+        }
+
+        /* 🔥 SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: #1e1e2f;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #00c6ff;
+        }
+
+        .profile h3 {
+            margin-top: 10px;
+        }
+
+        .sidebar a {
+            padding: 12px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background: #00c6ff;
+        }
+
+        /* 🔥 MAIN */
+        .main {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 550px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .header-bar {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102,126,234,0.5);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        #msg {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+    <div class="profile">
+        <img src="https://i.pravatar.cc/100" alt="Admin">
+        <h3>Admin</h3>
+        <p style="font-size:12px;color:#aaa;">Super Admin</p>
+    </div>
+
+    <a href="admin.html">Dashboard</a>
+    <a href="addquestion.html">Add Question</a>
+    <a href="viewquestions.html">View Questions</a>
+	<a href="viewusers.html"> Users</a>
+    <a href="adminprofile.html">Profile</a>
+    <a href="index.html">Logout</a>
+
+</div>
+
+<!-- 🔥 MAIN -->
+<div class="main">
+
+<div class="container">
+
+<h2>Update Question</h2>
+<div class="header-bar">Edit existing quiz question</div>
+
+<form id="updateForm">
+
+    <input type="hidden" id="id">
+
+    <div class="form-group">
+        <label>Question Title</label>
+        <input type="text" id="questionTitle">
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>Option 1</label>
+            <input type="text" id="option1">
+        </div>
+        <div class="form-group">
+            <label>Option 2</label>
+            <input type="text" id="option2">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>Option 3</label>
+            <input type="text" id="option3">
+        </div>
+        <div class="form-group">
+            <label>Option 4</label>
+            <input type="text" id="option4">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Correct Answer</label>
+        <input type="text" id="correctAnswer">
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>Difficulty Level</label>
+            <input type="text" id="difficultyLevel">
+        </div>
+
+        <div class="form-group">
+            <label>Category</label>
+            <input type="text" id="category">
+        </div>
+    </div>
+
+    <button type="submit">Update Question</button>
+
+</form>
+
+<p id="msg"></p>
+
+</div>
+</div>
+
+<script>
+
+// Get ID
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+// Load data
+fetch("http://localhost:8080/admin/questions/" + id)
+.then(res => res.json())
+.then(q => {
+    document.getElementById("id").value = q.id;
+    document.getElementById("questionTitle").value = q.questionTitle;
+    document.getElementById("option1").value = q.option1;
+    document.getElementById("option2").value = q.option2;
+    document.getElementById("option3").value = q.option3;
+    document.getElementById("option4").value = q.option4;
+    document.getElementById("correctAnswer").value = q.correctAnswer;
+    document.getElementById("difficultyLevel").value = q.difficultyLevel;
+    document.getElementById("category").value = q.category;
+});
+
+// Update API
+document.getElementById("updateForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const updatedData = {
+        questionTitle: document.getElementById("questionTitle").value,
+        option1: document.getElementById("option1").value,
+        option2: document.getElementById("option2").value,
+        option3: document.getElementById("option3").value,
+        option4: document.getElementById("option4").value,
+        correctAnswer: document.getElementById("correctAnswer").value,
+        difficultyLevel: document.getElementById("difficultyLevel").value,
+        category: document.getElementById("category").value
+    };
+
+    fetch("http://localhost:8080/admin/updatequestion/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        document.getElementById("msg").style.color = "green";
+        document.getElementById("msg").innerText = " " + msg;
+    })
+    .catch(err => {
+        document.getElementById("msg").style.color = "red";
+        document.getElementById("msg").innerText = " " + err;
+    });
+});
+
+</script>
+
+</body>
+</html>

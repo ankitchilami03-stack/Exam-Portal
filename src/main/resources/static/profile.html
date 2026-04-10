@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+
+    <style>
+    body {
+        font-family: Arial;
+        margin: 0;
+        background: linear-gradient(135deg, #eef2f7, #dfe9f3);
+        padding-top: 80px;
+    }
+
+    /* NAVBAR (UNCHANGED) */
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 70px;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        z-index: 100;
+        box-sizing: border-box;
+    }
+
+    .logo {
+        color: #fff;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .nav-links a {
+        color: #fff;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 500;
+        padding: 8px 15px;
+        border-radius: 6px;
+        transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+        background: #ffcc00;
+        color: black;
+    }
+
+    /* PROFILE CARD */
+    .container {
+        width: 450px;
+        margin: 90px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        text-align: left;
+    }
+
+    .container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* PROFILE IMAGE */
+    .profile-img {
+        display: block;
+        margin: 0 auto 20px auto;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #007bff;
+    }
+
+    .info {
+        background: #f7f9fc;
+        padding: 12px 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        font-size: 16px;
+        border-left: 4px solid #007bff;
+    }
+
+    .info b {
+        color: #333;
+    }
+
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">Quiz Portal</div>
+
+    <div class="nav-links">
+        <a href="user.html">HomePage</a>
+        <a href="quiz.html">Start Quiz</a>
+		<!-- <a href="viewscore.html">View Score</a>-->
+        <a href="profile.html">Profile</a>
+        <a href="index.html" onclick="logout()">Logout</a>
+    </div>
+</div>
+
+<!-- PROFILE CONTENT -->
+<div class="container" id="profileBox">
+    <h2>Loading Profile...</h2>
+</div>
+
+<script>
+
+// LOAD PROFILE
+window.onload = function () {
+    loadProfile();
+};
+
+function loadProfile() {
+
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+        document.getElementById("profileBox").innerHTML =
+            "<h3>No user logged in</h3>";
+        return;
+    }
+
+    fetch("http://localhost:8080/user/profile/" + user.id)
+        .then(res => res.json())
+        .then(data => {
+
+            document.getElementById("profileBox").innerHTML = `
+                <h2>User Profile</h2>
+
+                <img class="profile-img"
+                     src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                     alt="Profile Image">
+
+                <div class="info"><b>Name:</b> ${data.name}</div>
+                <div class="info"><b>Email:</b> ${data.email}</div>
+                <div class="info"><b>Phone:</b> ${data.phone}</div>
+                <div class="info"><b>Address:</b> ${data.address}</div>
+                <div class="info"><b>Role:</b> ${data.role}</div>
+            `;
+        })
+        .catch(err => {
+            console.log(err);
+            document.getElementById("profileBox").innerHTML =
+                "<h3>Error loading profile</h3>";
+        });
+}
+
+// LOGOUT
+function logout() {
+    localStorage.removeItem("user");
+}
+
+</script>
+
+</body>
+</html>

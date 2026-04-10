@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Profile</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: #f4f6f9;
+}
+
+/* 🔥 SIDEBAR */
+.sidebar {
+    width: 250px;
+    background: #1e1e2f;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #00c6ff;
+}
+
+.profile h3 {
+    margin-top: 10px;
+}
+
+.sidebar a {
+    padding: 12px;
+    margin: 5px 0;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #00c6ff;
+}
+
+/* 🔥 MAIN CONTENT */
+.main {
+    flex: 1;
+    padding: 30px;
+}
+
+/* HEADER */
+.header {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* PROFILE CARD */
+.card {
+    background: white;
+    width: 350px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* AVATAR */
+.card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #00c6ff;
+    margin-bottom: 15px;
+}
+
+/* INFO */
+.info {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+/* BUTTON */
+.btn {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    background: #00c6ff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #009fd4;
+}
+
+/* CENTER CARD */
+.center {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+    <div class="profile">
+        <img src="https://i.pravatar.cc/100" alt="Admin">
+        <h3>Admin</h3>
+        <p style="font-size:12px;color:#aaa;">Super Admin</p>
+    </div>
+
+    <a href="admin.html">Dashboard</a>
+    <a href="addquestion.html">Add Question</a>
+    <a href="viewquestions.html">View Question</a>
+    <a href="viewusers.html">Users</a>
+    <a href="adminprofile.html">Profile</a>
+    <a href="index.html" onclick="logout()">Logout</a>
+
+</div>
+
+<!-- 🔥 MAIN CONTENT -->
+<div class="main">
+
+    <div class="header">
+        Admin Profile
+    </div>
+
+    <div class="center">
+        <div class="card" id="profileCard">
+            <h3>Loading Profile...</h3>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+// LOAD PROFILE
+window.onload = function () {
+    loadProfile();
+};
+
+function loadProfile() {
+
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+        document.getElementById("profileCard").innerHTML =
+            "<h3>No user logged in</h3>";
+        return;
+    }
+
+    fetch("http://localhost:8080/user/profile/" + user.id)
+        .then(res => res.json())
+        .then(data => {
+
+            console.log("PROFILE DATA:", data);
+
+            document.getElementById("profileCard").innerHTML = `
+                <img src="https://i.pravatar.cc/100" />
+
+                <h2>${data.name}</h2>
+
+                <div class="info"><b>Email:</b> ${data.email}</div>
+                <div class="info"><b>Phone:</b> ${data.phone}</div>
+                <div class="info"><b>Address:</b> ${data.address}</div>
+                <div class="info"><b>Role:</b> ${data.role}</div>
+
+                <button class="btn" onclick="logout()">Logout</button>
+            `;
+        })
+        .catch(err => {
+            console.log(err);
+            document.getElementById("profileCard").innerHTML =
+                "<h3>Error loading profile</h3>";
+        });
+}
+// LOGOUT
+function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>

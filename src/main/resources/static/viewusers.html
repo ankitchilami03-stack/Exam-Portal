@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f6f9;
+            display: flex;
+        }
+
+        /* 🔥 SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: #1e1e2f;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #00c6ff;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            background: #00c6ff;
+        }
+
+        /* 🔥 MAIN CONTENT */
+        .main {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        button {
+            padding: 6px 10px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .delete {
+            background: red;
+        }
+
+        .refresh {
+            background: green;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+    <div class="profile">
+        <img src="https://i.pravatar.cc/100" alt="Admin">
+        <h3>Admin</h3>
+        <p style="font-size:12px;color:#aaa;">Super Admin</p>
+    </div>
+
+    <a href="admin.html">Dashboard</a>
+    <a href="addquestion.html">Add Question</a>
+    <a href="viewquestions.html">View Question</a>
+    <a href="viewusers.html">Users</a>
+    <a href="adminprofile.html">Profile</a>
+    <a href="index.html">Logout</a>
+
+</div>
+
+<!-- 🔥 MAIN CONTENT -->
+<div class="main">
+
+<h2>User Dashboard</h2>
+
+<button class="refresh" onclick="loadUsers()">Refresh Users</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody id="userTable">
+    </tbody>
+</table>
+
+</div>
+
+<script>
+const API_BASE = "http://localhost:8080/quiz";
+
+// 1. Load Users
+function loadUsers() {
+    fetch(API_BASE + "/getusers")
+        .then(response => response.json())
+        .then(data => {
+            let table = document.getElementById("userTable");
+            table.innerHTML = "";
+
+            data.forEach(user => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>
+                            <button class="delete" onclick="deleteUser(${user.id})">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(error => console.log("Error:", error));
+}
+
+// 2. Delete User
+function deleteUser(id) {
+    if (confirm("Are you sure you want to delete this user?")) {
+        fetch(API_BASE + "/delete/" + id, {
+            method: "DELETE"
+        })
+        .then(response => response.text())
+        .then(msg => {
+            alert(msg);
+            loadUsers();
+        })
+        .catch(error => console.log("Error:", error));
+    }
+}
+
+// auto load
+loadUsers();
+</script>
+
+</body>
+</html>

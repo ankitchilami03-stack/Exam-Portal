@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Questions</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f9;
+}
+
+/* 🔥 SIDEBAR */
+.sidebar {
+    width: 250px;
+    background: #1e1e2f;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #00c6ff;
+}
+
+/* LINKS */
+.sidebar a {
+    padding: 12px;
+    margin: 5px 0;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    display: block;
+}
+
+.sidebar a:hover {
+    background: #00c6ff;
+}
+
+/* 🔥 MAIN */
+.main {
+    margin-left: 300px;   /* pushes content away from sidebar */
+    padding: 80px 20px 20px 20px; /* 🔥 top space fix */
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+/* 🔥 CARD FIX (IMPORTANT) */
+.card {
+    background: white;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.question {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 🔥 BUTTONS */
+button {
+    padding: 6px 10px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.update-btn {
+    background: #4facfe;
+    color: white;
+}
+
+.delete-btn {
+    background: #ff4d4d;
+    color: white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+    <div class="profile">
+        <img src="https://i.pravatar.cc/100" alt="Admin">
+        <h3>Admin</h3>
+        <p style="font-size:12px;color:#aaa;">Super Admin</p>
+    </div>
+
+    <a href="admin.html">Dashboard</a>
+    <a href="addquestion.html"> Add Question</a>
+    <a href="viewquestions.html"> View Questions</a>
+	<a href="viewusers.html"> Users</a>
+    <a href="adminprofile.html"> Profile</a>
+    <a href="index.html">Logout</a>
+
+</div>
+
+<!-- 🔥 MAIN -->
+<div class="main">
+
+    <h2>All Questions</h2>
+
+    <div id="questionContainer"></div>
+
+</div>
+
+<script>
+
+fetch("http://localhost:8080/admin/questions")
+.then(res => res.json())
+.then(data => {
+
+    const container = document.getElementById("questionContainer");
+    container.innerHTML = "";
+
+    data.forEach(q => {
+
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <p class="question">Q: ${q.questionTitle}</p>
+            <p>1) ${q.option1}</p>
+            <p>2) ${q.option2}</p>
+            <p>3) ${q.option3}</p>
+            <p>4) ${q.option4}</p>
+            <p><b>Answer:</b> ${q.correctAnswer}</p>
+            <p><b>Difficulty:</b> ${q.difficultyLevel}</p>
+            <p><b>Category:</b> ${q.category}</p>
+
+            <button class="update-btn" onclick="updateQuestion(${q.id})">Update</button>
+            <button class="delete-btn" onclick="deleteQuestion(${q.id})">Delete</button>
+        `;
+
+        container.appendChild(div);
+    });
+
+});
+
+function updateQuestion(id) {
+    window.location.href = "updatequestion.html?id=" + id;
+}
+
+function deleteQuestion(id) {
+
+    if (confirm("Are you sure?")) {
+
+        fetch("http://localhost:8080/admin/deletequestion/" + id, {
+            method: "DELETE"
+        })
+        .then(res => res.text())
+        .then(msg => {
+            alert(msg);
+            location.reload();
+        });
+
+    }
+}
+
+</script>
+
+</body>
+</html>

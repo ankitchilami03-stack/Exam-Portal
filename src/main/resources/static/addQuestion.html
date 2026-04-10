@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Question</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f4f6f9;
+        }
+
+        /* 🔥 SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: #1e1e2f;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #00c6ff;
+        }
+
+        .profile h3 {
+            margin-top: 10px;
+        }
+
+        .sidebar a {
+            padding: 12px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background: #00c6ff;
+        }
+
+        /* 🔥 MAIN CONTENT */
+        .main {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 550px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .header-bar {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102,126,234,0.5);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        #msg {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+    <div class="profile">
+        <img src="https://i.pravatar.cc/100" alt="Admin">
+        <h3>Admin</h3>
+        <p style="font-size:12px;color:#aaa;">Super Admin</p>
+    </div>
+
+    <a href="admin.html"> Dashboard</a>
+    <a href="addquestion.html"> Add Question</a>
+    <a href="viewquestions.html"> View Questions</a>
+	<a href="viewusers.html"> Users</a>
+    <a href="adminprofile.html"> Profile</a>
+    <a href="index.html"> Logout</a>
+
+</div>
+
+<!-- 🔥 MAIN -->
+<div class="main">
+
+<div class="container">
+
+    <h2>Add New Question</h2>
+    <div class="header-bar">Create quiz questions for students</div>
+
+    <form id="questionForm">
+
+        <div class="form-group">
+            <label>Question Title</label>
+            <input type="text" id="questionTitle" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Option 1</label>
+                <input type="text" id="option1" required>
+            </div>
+            <div class="form-group">
+                <label>Option 2</label>
+                <input type="text" id="option2" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Option 3</label>
+                <input type="text" id="option3" required>
+            </div>
+            <div class="form-group">
+                <label>Option 4</label>
+                <input type="text" id="option4" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Correct Answer</label>
+            <input type="text" id="correctAnswer" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Difficulty</label>
+                <select id="difficultyLevel">
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <input type="text" id="category" required>
+            </div>
+        </div>
+
+        <button type="submit">Add Question</button>
+
+    </form>
+
+    <p id="msg"></p>
+
+</div>
+
+</div>
+
+<script>
+document.getElementById("questionForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const data = {
+        questionTitle: document.getElementById("questionTitle").value,
+        option1: document.getElementById("option1").value,
+        option2: document.getElementById("option2").value,
+        option3: document.getElementById("option3").value,
+        option4: document.getElementById("option4").value,
+        correctAnswer: document.getElementById("correctAnswer").value,
+        difficultyLevel: document.getElementById("difficultyLevel").value,
+        category: document.getElementById("category").value
+    };
+
+    fetch("http://localhost:8080/admin/addQuestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        document.getElementById("msg").style.color = "green";
+        document.getElementById("msg").innerText = "✅ " + msg;
+    })
+    .catch(err => {
+        document.getElementById("msg").style.color = "red";
+        document.getElementById("msg").innerText = "❌ Error: " + err;
+    });
+});
+</script>
+
+</body>
+</html>

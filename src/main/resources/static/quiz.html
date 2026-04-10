@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f6f9;
+        }
+
+        .container {
+            width: 60%;
+            margin: 80px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .question-box {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .result-box {
+            background: #e9ffe9;
+            padding: 15px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #ffcc00;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">Quiz Portal</div>
+    <div class="nav-links">
+        <a href="user.html">Home Page</a>
+        <a href="quiz.html">Start Quiz</a>
+		<!-- <a href="viewscore.html">View Score</a>-->
+        <a href="profile.html">Profile</a>
+        <a href="index.html">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2>Quiz Application</h2>
+
+    <input type="text" id="category" placeholder="Category">
+    <input type="number" id="noOfQuestions" placeholder="No of Questions">
+
+    <button onclick="startQuiz()">Start Quiz</button>
+
+    <div id="quizBox"></div>
+
+    <button id="submitBtn" onclick="submitQuiz()" style="display:none;">
+        Submit Quiz
+    </button>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+let quizData = [];
+let quizId = 1;
+
+// ================= GET USER FROM LOCALSTORAGE (FIX) =================
+function getUser() {
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user || !user.id) {
+        alert("User not logged in!");
+        window.location.href = "index.html";
+        return null;
+    }
+    return user;
+}
+
+// ================= START QUIZ =================
+function startQuiz() {
+
+    let category = document.getElementById("category").value;
+    let noOfQuestions = document.getElementById("noOfQuestions").value;
+
+    fetch(`http://localhost:8080/quiz/start?category=${category}&noOfQuestions=${noOfQuestions}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        quizData = data.questions;
+        showQuiz();
+
+        document.getElementById("submitBtn").style.display = "block";
+    });
+}
+
+// ================= SHOW QUIZ =================
+function showQuiz() {
+
+    let html = "";
+
+    quizData.forEach((q, index) => {
+
+        html += `
+            <div class="question-box">
+                <h3>${q.questionTitle}</h3>
+
+                <input type="radio" name="q${index}" value="A"> ${q.option1}<br>
+                <input type="radio" name="q${index}" value="B"> ${q.option2}<br>
+                <input type="radio" name="q${index}" value="C"> ${q.option3}<br>
+                <input type="radio" name="q${index}" value="D"> ${q.option4}<br>
+            </div>
+        `;
+    });
+
+    document.getElementById("quizBox").innerHTML = html;
+}
+
+// ================= SUBMIT QUIZ (FIXED USER ID) =================
+function submitQuiz() {
+
+    let user = getUser();
+    if (!user) return;
+
+    let answers = [];
+
+    quizData.forEach((q, index) => {
+
+        let selected = document.querySelector(`input[name="q${index}"]:checked`);
+
+        answers.push({
+            questionId: q.id,
+            selectedOption: selected ? selected.value : null
+        });
+    });
+
+    let payload = {
+        quizId: quizId,
+        userId: user.id,   // ✅ FIXED HERE
+        answers: answers
+    };
+
+    fetch("http://localhost:8080/quiz/submit", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.text())
+    .then(msg => {
+
+        document.getElementById("result").innerHTML = `
+            <div class="result-box">
+                <h3>${msg}</h3>
+                <p><b>User ID:</b> ${user.id}</p>
+                <button onclick="viewScore()">View Result</button>
+            </div>
+        `;
+    });
+}
+
+// ================= VIEW SCORE =================
+function viewScore() {
+
+    let user = getUser();
+
+    fetch(`http://localhost:8080/quiz/score/${quizId}/${user.id}`)
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("result").innerHTML = `
+            <div class="result-box">
+                <h3>Quiz Result</h3>
+                Score: ${data.score}
+            </div>
+        `;
+    });
+}
+
+</script>
+
+</body>
+</html>

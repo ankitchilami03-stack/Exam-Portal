@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background-color: rgba(0,0,0,0.7);
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            margin-right: 25px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: yellow;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            background: rgba(0,0,0,0.6);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* CONTENT SECTION */
+        .content {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            font-size: 18px;
+            width: 70%;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+        /* IMAGE SECTION */
+        .image-section {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .image-section img {
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="login.html">Start Quiz</a>
+    <a href="aboutus.html">About Us</a>
+    <a href="contact.html">Contact</a>
+	<a href="register.html" style="margin-left: 60%;">Register</a>
+	<a href="login.html">Login</a>
+
+</div>
+
+<!-- HERO SECTION -->
+<div class="hero">
+    <h1>Welcome to Quiz App</h1>
+</div>
+
+<!-- PURPOSE SECTION -->
+<div class="content">
+    <h2>Why Use This Quiz App?</h2>
+    <p>
+        This Quiz Application helps students improve their knowledge and test their skills.
+        You can attempt quizzes, learn new concepts, and track your performance.
+        It is designed for students who want to prepare for exams in a simple and interactive way.
+    </p>
+</div>
+
+<!-- STUDENT IMAGES -->
+<div class="image-section">
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f" alt="Group Study">
+    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b" alt="Learning">
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>© 2026 Quiz App | Designed for Students</p>
+</div>
+
+</body>
+</html>
