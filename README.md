@@ -1,4 +1,4 @@
-# 🎯 Online Examination System (Spring Boot REST API)
+# 🎯  Exam Portal System (Spring Boot REST API)
 
 A production-style backend Quiz Management System built using **Java, Spring Boot, and MySQL**.  
 This project demonstrates clean architecture, REST API design, and database integration.
@@ -37,7 +37,7 @@ src/main/java/com/example/quizapp
 ├── service           → Service implementation  
 ├── repository        → Database operations  
 ├── model             → Entity classes  
-└── Online Examination → Main Spring Boot class  
+└── Exam Portal → Main Spring Boot class  
 
 src/main/resources  
 ├── application.properties  
@@ -71,7 +71,7 @@ src/main/resources
 ## 🛠️ Setup Instructions
 
 ### 1. Clone Repository
-git clone https://github.com/your-username/Online Examination System.git
+git clone https://github.com/your-username/Exam Portal System.git
 
 ---
 
@@ -117,7 +117,7 @@ mvn spring-boot:run
 ##  Author
 
 Name: Ankit    
-Project:Online Examination System
+Project:Exam Portal System
 
 ---
 
